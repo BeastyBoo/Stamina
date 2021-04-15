@@ -1,0 +1,6 @@
+name: Stamina
+version: ${project.version}
+main: com.github.beastyboo.stamina.stamina.StaminaPlugin
+load: STARTUP
+authors: [ michqql, BeastyBoo ]
+description: A fork of the Stamina plugin.
