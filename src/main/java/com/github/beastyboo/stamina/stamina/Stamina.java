@@ -8,9 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class Stamina{
@@ -20,6 +18,7 @@ public class Stamina{
     private final YamlPortConfiguration<ConfigPort> configManager;
     private final ConfigPort config;
     private final Map<UUID, StaminaPlayer> staminaPlayerMap;
+    private final Set<UUID> cachedJump;
 
     private final PotionEffect slownessPotion;
     private final PotionEffect jumpDenyPotion;
@@ -31,6 +30,7 @@ public class Stamina{
         this.configManager.reloadConfig();
         this.config = configManager.getConfigData();
         this.staminaPlayerMap = new HashMap<>();
+        this.cachedJump = new HashSet<>();
 
         this.slownessPotion = new PotionEffect(PotionEffectType.SLOW, 2, 3, true, false);
         this.jumpDenyPotion = new PotionEffect(PotionEffectType.JUMP, 2, 250, true, false);
@@ -116,6 +116,10 @@ public class Stamina{
                     continue;
                 }
 
+                if(cachedJump.contains(player.getUniqueId())) {
+                    continue;
+                }
+
                 if (player.getVelocity().getY() >= 0 && !player.isOnGround() ) {
                     double newStamina = staminaPlayer.getCurrentStaminaLevel() - config.jumpDepletionValue();
                     if(newStamina <= 0.0) {
@@ -124,9 +128,12 @@ public class Stamina{
                     } else {
                         staminaPlayer.setCurrentStaminaLevel(newStamina);
                     }
+
+                    cachedJump.add(player.getUniqueId());
+                    Bukkit.getScheduler().runTaskLater(plugin, () -> cachedJump.remove(player.getUniqueId()), 13L);
                 }
             }
-        }, 0L, 13L);
+        }, 0L, 9L);
     }
 
     public JavaPlugin getPlugin() {

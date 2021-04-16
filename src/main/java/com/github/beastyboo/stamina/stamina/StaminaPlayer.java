@@ -41,26 +41,5 @@ public class StaminaPlayer {
         isActive = active;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        StaminaPlayer that = (StaminaPlayer) o;
-        return Double.compare(that.maxStaminaLevel, maxStaminaLevel) == 0 && Double.compare(that.currentStaminaLevel, currentStaminaLevel) == 0 && isActive == that.isActive && uuid.equals(that.uuid);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(uuid, maxStaminaLevel, currentStaminaLevel, isActive);
-    }
-
-    @Override
-    public String toString() {
-        return "StaminaPlayer{" +
-                "uuid=" + uuid +
-                ", maxStaminaLevel=" + maxStaminaLevel +
-                ", currentStaminaLevel=" + currentStaminaLevel +
-                ", isActive=" + isActive +
-                '}';
-    }
 }
